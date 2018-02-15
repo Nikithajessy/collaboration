@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.nik.model.User;
 @Repository
 @Transactional
+
 public class UserDaoImpl implements UserDao {
 	@Autowired
 private SessionFactory sessionFactory;
@@ -33,8 +34,18 @@ private SessionFactory sessionFactory;
 		Query query=session.createQuery("from User where email=? and password=?");
 		query.setString(0, user.getEmail());
 		query.setString(1,user.getPassword());
-		user=(User)query.uniqueResult();
+		user=(User)query.uniqueResult();//1 user object or null value
 		return user;// 1 user object[valid]  / null value [invalid credentials]
 	}
+	public void update(User user) {
+		Session session=sessionFactory.getCurrentSession();
+		session.update(user);//update User set email,password,firstname...lastname,online where email=?
+		
+	}
+	public User getUser(String email) {
+		Session session=sessionFactory.getCurrentSession();
+		User user=(User)session.get(User.class, email);
+		return user;
+	}
+	
 }
-

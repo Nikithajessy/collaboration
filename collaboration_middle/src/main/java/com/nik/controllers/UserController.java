@@ -1,5 +1,7 @@
 package com.nik.controllers;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,8 @@ public ResponseEntity<?> registration(@RequestBody User user){
 	}
 }
 @RequestMapping(value="/login",method=RequestMethod.POST)
-//{'email':'john.s@abc.com','password':'123'}  - i/p
-public ResponseEntity<?> login(@RequestBody User user){
+//{'email':'john.s@abc.com','password':'123'}  - i/p  [login.html]
+public ResponseEntity<?> login(@RequestBody User user,HttpSession session){
 	User validUser=userDao.login(user);
 	if(validUser==null)//invalid credentials, error
 	{
@@ -43,9 +45,48 @@ public ResponseEntity<?> login(@RequestBody User user){
 		return new ResponseEntity<ErrorClazz>(error,HttpStatus.UNAUTHORIZED);//401
 	}
 	else{//valid credentials, success
+		validUser.setOnline(true);
+		userDao.update(validUser);
+		session.setAttribute("loginId", validUser.getEmail());//assign emailid to an attribute "loginId"
+		//key & value
 		return new ResponseEntity<User>(validUser,HttpStatus.OK);
 	}
 }
 
+@RequestMapping(value="/getuser",method=RequestMethod.GET)
+public ResponseEntity<?> getUser(HttpSession session){
+	String emailId=(String)session.getAttribute("loginId");
+	if(emailId==null){
+		ErrorClazz error=new ErrorClazz(4,"Unauthorized access.. Please login");
+		return new ResponseEntity<ErrorClazz>(error,HttpStatus.UNAUTHORIZED);//401 error function
+	}
+	User user=userDao.getUser(emailId);
+	return new ResponseEntity<User>(user,HttpStatus.OK);//success function
 }
 
+@RequestMapping(value="/logout",method=RequestMethod.PUT)
+public ResponseEntity<?> logout(HttpSession session ){
+	String email=(String)session.getAttribute("loginId");
+	if(email==null){
+		ErrorClazz error=new ErrorClazz(3,"Unauthorized access");
+		return new ResponseEntity<ErrorClazz>(error,HttpStatus.UNAUTHORIZED);
+	}
+	User user=userDao.getUser(email);
+	user.setOnline(false);
+	userDao.update(user);//update online=false where email=?
+	session.removeAttribute("loginId");
+	session.invalidate();
+	return new ResponseEntity<Void>(HttpStatus.OK);
+}
+@RequestMapping(value="/update",method=RequestMethod.PUT)
+public ResponseEntity<?> update(@RequestBody User user,HttpSession session){
+	String email=(String)session.getAttribute("loginId");
+	if(email==null){
+		ErrorClazz error=new ErrorClazz(3,"Unauthorized access");
+		return new ResponseEntity<ErrorClazz>(error,HttpStatus.UNAUTHORIZED);
+	}
+	userDao.update(user);
+	return new ResponseEntity<User>(user,HttpStatus.OK);
+}
+
+}
