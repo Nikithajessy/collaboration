@@ -1,9 +1,6 @@
 package com.nik.configuration;
 
 
-import com.nik.model.User;
-
-
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -16,9 +13,16 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.nik.model.BlogPost;
+import com.nik.model.BlogPostLikes;
+import com.nik.model.Job;
+import com.nik.model.Notification;
+import com.nik.model.User;
+
 @Configuration
 @EnableTransactionManagement
 public class DBConfiguration {
+	
 	public DBConfiguration(){
 		System.out.println("DBCOnfiguration class instantiated");
 	}
@@ -32,7 +36,7 @@ public class DBConfiguration {
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
 		hibernateProperties.setProperty("hibernate.show_sql", "true");
 		lsf.addProperties(hibernateProperties);
-		Class classes[]=new Class[]{User.class};
+		Class classes[]=new Class[]{User.class,Job.class,BlogPost.class,BlogPostLikes.class,Notification.class};
 	    return lsf.addAnnotatedClasses(classes).buildSessionFactory();
 	}
 	@Bean
