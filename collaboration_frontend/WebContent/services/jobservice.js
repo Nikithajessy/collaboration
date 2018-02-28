@@ -3,7 +3,7 @@
  */
 	app.factory('JobService',function($http){
 	var jobService={}
-	var BASE_URL = "http://localhost:9090/collaboration_middle"
+	var BASE_URL = "http://localhost:9095/collaboration_middle"
 		
 		
 	jobService.addJob=function(job){

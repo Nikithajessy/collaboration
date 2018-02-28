@@ -4,7 +4,7 @@
 app.factory('UserService',function($http){
 	var userService={}
 	
-	var BASE_URL = "http://localhost:9090/collaboration_middle"
+	var BASE_URL = "http://localhost:9095/collaboration_middle"
 	
 		userService.register=function(user){
 		 return $http.post(BASE_URL + "/register",user)
