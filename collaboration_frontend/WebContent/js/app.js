@@ -54,12 +54,14 @@ app.config(function($routeProvider){
 		templateUrl:'views/approvalform.html',
 		controller:'BlogPostDetailController'
 	})
-
-	
-.when('/getnotification/:id',{
+	.when('/getnotification/:id',{
 		templateUrl:'views/notificationdetails.html',
 		controller:'NotificationController'
 	})
+	.when('/uploadprofilepic',{
+		templateUrl:'views/uploadprofilepic.html'
+	})
+
 	
 	.otherwise({
 		templateUrl:'views/login.html',

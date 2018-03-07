@@ -18,6 +18,7 @@ import com.nik.model.BlogPost;
 import com.nik.model.BlogPostLikes;
 import com.nik.model.Job;
 import com.nik.model.Notification;
+import com.nik.model.ProfilePicture;
 import com.nik.model.User;
 
 @Configuration
@@ -37,7 +38,7 @@ public class DBConfiguration {
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
 		hibernateProperties.setProperty("hibernate.show_sql", "true");
 		lsf.addProperties(hibernateProperties);
-		Class classes[]=new Class[]{User.class,Job.class,BlogPost.class,BlogPostLikes.class,Notification.class,BlogComment.class};
+		Class classes[]=new Class[]{User.class,Job.class,BlogPost.class,BlogPostLikes.class,Notification.class,BlogComment.class,ProfilePicture.class};
 	    return lsf.addAnnotatedClasses(classes).buildSessionFactory();
 	}
 	@Bean
